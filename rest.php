@@ -1,5 +1,5 @@
 <?php
-class Http
+class Rest
 {
     const HTTP  = 'http';
     const HTTPS = 'https';
@@ -21,7 +21,7 @@ class Http
     const INTERNAL_ERROR = 500; 
 }
 
-class HttpExceptions
+class RestException
 {
     private $_status = null;
     private $_type   = null;

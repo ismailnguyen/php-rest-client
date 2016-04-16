@@ -1,4 +1,6 @@
 <?php
+require_once 'rest.php';
+
 class RestClient
 {
     private $_protocol = null;
