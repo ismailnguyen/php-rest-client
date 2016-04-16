@@ -25,7 +25,7 @@ class RestClient
         return new self($host, $port, $protocol);
     }
    
-    public function param($key, $value = null)
+    public function param($key, $value = '')
     {
         $this->_params[$key] = $value;
         return $this;
@@ -71,7 +71,7 @@ class RestClient
 		return $this;
 	}
 	
-	private function _buildUrl($url = null)
+	private function _buildUrl($url)
     {
         return "{$this->_protocol}://{$this->_host}:{$this->_port}/{$url}";
     }
