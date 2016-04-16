@@ -1,5 +1,6 @@
 <?php
-require_once 'rest.php';
+require_once 'rest_constants.php';
+require_once 'rest_exceptions.php';
 
 class RestClient
 {
