@@ -31,7 +31,7 @@ class RestClient
         return $this;
     }
        
-    public function authentification($user, $pass)
+    public function authentication($user, $pass)
     {
         $this->_user = $user;
         $this->_pass = $pass;

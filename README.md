@@ -1,3 +1,5 @@
+# PHP Rest client
+
 ## Install
 
 ```
@@ -13,7 +15,7 @@ $musics = RestClient::connect('localhost')
 
 ```
 
-## Examples
+### Examples
 
 
 Use different port and protocol:
@@ -31,6 +33,16 @@ $musics = RestClient::connect('localhost')
 	->param('genre', 'hiphop')
 	->param('order', 'desc')
 	->param('onlyTitle')
+    ->run();
+
+```
+
+Add authentication to request:
+```
+$result = RestClient::connect('localhost')
+    ->delete('musics')
+	->authentication('ismail', 'foobar')
+	->param('title', 'some title')
     ->run();
 
 ```
