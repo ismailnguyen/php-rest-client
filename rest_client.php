@@ -75,5 +75,69 @@ class RestClient
     {
         return "{$this->_protocol}://{$this->_host}:{$this->_port}/{$url}";
     }
+	
+	public function run()
+    {
+        $result = array();
+
+        $curl_init = curl_multi_init();
+		
+		$curl = curl_init();
+		
+		if(!is_null($this->_user)){
+		   curl_setopt($curly, CURLOPT_USERPWD, $this->_user.':'.$this->_pass);
+		}
+		
+		switch ($this->_method) {
+			case Rest::POST:
+				curl_setopt($curl, CURLOPT_URL, $this->_url);
+				curl_setopt($curl, CURLOPT_POST, true);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params);
+				break;
+				
+			case Rest::GET:
+				curl_setopt($curl, CURLOPT_URL, $this->_url . '?' . http_build_query($this->_params));
+				break;
+				
+			case Rest::PUT:
+				curl_setopt($curl, CURLOPT_URL, $this->_url);
+				curl_setopt($curl, CURLOPT_POST, true);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params);
+				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, Rest::PUT);
+				break;
+				
+			case Rest::DELETE:
+				curl_setopt($curl, CURLOPT_URL, $this->_url . '?' . http_build_query($this->_params));
+				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, Rest::DELETE);
+				break;
+		}
+		
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $this->_headers);
+		
+		curl_multi_add_handle($curl_init, $curl);
+    
+        $running = null;
+        do {
+            curl_multi_exec($curl_init, $running);
+            sleep(0.2);
+        } while($running > 0);
+    
+		$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		
+		switch ($status) {
+			case Rest::HTTP_OK:
+			case Rest::HTTP_CREATED:
+			case Rest::HTTP_ACCEPTED:
+				$result = curl_multi_getcontent($curl);
+				break;
+			default:
+				$result = new RestException($status, $this->_method, $this->_url, $this->_params);
+		}
+		curl_multi_remove_handle($curl_init, $curl);
+
+        curl_multi_close($curl_init);
+        return $result;
+    }
 }
 ?>
