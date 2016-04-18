@@ -24,8 +24,21 @@
 		}
 	   
 		public function param($key, $value = '') {
-			$this->_params[$key] = $value;
+			
+			if (is_array($key))
+				$this->_param($key);
+			else
+				$this->_params[$key] = $value;
+			
 			return $this;
+		}
+		
+		private function _param($data) {
+			foreach ($data as $value) {
+				$value = addslashes($value);
+			}
+			
+			$this->_params = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 		}
 		   
 		public function authentication($user, $pass) {
@@ -50,8 +63,8 @@
 			return $this->_buildRequest(Rest::DELETE, $url);
 		}
 		
-		public function setHeaders($headers) {
-			$this->_headers = $headers;
+		public function header($key, $value) {
+			$this->_headers[] = "{$key}: {$value}";
 			return $this;
 		}
 		
@@ -81,7 +94,7 @@
 				case Rest::POST:
 					curl_setopt($curl, CURLOPT_URL, $this->_url);
 					curl_setopt($curl, CURLOPT_POST, true);
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params != null ? $this->_params : '');
 					break;
 					
 				case Rest::GET:
@@ -91,7 +104,7 @@
 				case Rest::PUT:
 					curl_setopt($curl, CURLOPT_URL, $this->_url);
 					curl_setopt($curl, CURLOPT_POST, true);
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params);
+					curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_params != null ? $this->_params : '');
 					curl_setopt($curl, CURLOPT_CUSTOMREQUEST, Rest::PUT);
 					break;
 					
@@ -124,7 +137,7 @@
 					break;
 					
 				default:
-					$result = new RestException($status, $this->_method, $this->_url, $this->_params);
+					$result = new RestException($status, $this->_method, $this->_url, $this->_headers, $this->_params, curl_multi_getcontent($curl));
 			}
 			
 			curl_multi_remove_handle($curl_init, $curl);
