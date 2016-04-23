@@ -87,7 +87,7 @@
 			$curl = curl_init();
 			
 			if(!is_null($this->_user)) {
-			   curl_setopt($curly, CURLOPT_USERPWD, $this->_user.':'.$this->_pass);
+			   curl_setopt($curl, CURLOPT_USERPWD, $this->_user.':'.$this->_pass);
 			}
 			
 			switch ($this->_method) {
