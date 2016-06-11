@@ -12,7 +12,6 @@ require_once('rest_client.php');
 $musics = RestClient::connect('localhost')
     ->get('musics')
     ->run();
-
 ```
 
 ### Examples
@@ -23,7 +22,6 @@ Use different port and protocol:
 $musics = RestClient::connect('nguyenismail.com', 8080, Rest::HTTPS)
     ->get('musics')
     ->run();
-
 ```
 
 Add parameters to request:
@@ -34,7 +32,6 @@ $musics = RestClient::connect('localhost')
 	->param('order', 'desc')
 	->param('onlyTitle')
     ->run();
-
 ```
 
 Add authentication to request:
@@ -44,5 +41,4 @@ $result = RestClient::connect('localhost')
 	->authentication('ismail', 'foobar')
 	->param('title', 'some title')
     ->run();
-
 ```
